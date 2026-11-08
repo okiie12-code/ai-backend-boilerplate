@@ -74,12 +74,24 @@ def map_provider_error(exc: Exception) -> AppError:
     raise exc
 
 
+def _is_missing_credentials(exc: TypeError) -> bool:
+    # The SDK raises a bare TypeError at request-build time when no api_key /
+    # auth_token / credentials can be resolved -- before any HTTP call, so it is
+    # not an AnthropicError. Map it to a configuration error instead of a 500.
+    return "authentication method" in str(exc).lower()
+
+
 @contextmanager
 def provider_errors() -> Iterator[None]:
     try:
         yield
     except anthropic.AnthropicError as exc:
         raise map_provider_error(exc) from exc
+    except TypeError as exc:
+        if _is_missing_credentials(exc):
+            log.error("llm.configuration_error", error="no API credentials resolved")
+            raise LLMConfigurationError() from exc
+        raise
 
 
 class AIService:

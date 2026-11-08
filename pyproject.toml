@@ -33,6 +33,8 @@ packages = ["app"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+# fuzz_test.py is a live-server harness, not a unit test — don't auto-collect it.
+python_files = ["test_*.py"]
 
 [tool.ruff]
 line-length = 100

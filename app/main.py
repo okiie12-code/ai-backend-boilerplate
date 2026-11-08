@@ -7,12 +7,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api.routes import ai, health
+from app.api.routes import ai, commands, health, tip
 from app.core.config import Settings, get_settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logger import configure_logging, get_logger
 from app.core.middleware import RequestContextMiddleware
 from app.services.ai_service import build_client
+from app.services.ledger import Ledger
 
 log = get_logger(__name__)
 
@@ -24,6 +25,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.anthropic = build_client(settings)
+        app.state.ledger = Ledger.demo()
+        app.state.pending_plans = {}
         log.info("app.startup", environment=settings.environment, model=settings.llm_model)
         try:
             yield
@@ -54,6 +57,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(ai.router, prefix="/api/v1")
+    app.include_router(commands.router, prefix="/api/v1")
+    app.include_router(tip.router, prefix="/api/v1")
     return app
 
 

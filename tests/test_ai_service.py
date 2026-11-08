@@ -111,3 +111,11 @@ def test_extract_maps_sdk_errors() -> None:
     service, _ = make_service(status_error(anthropic.RateLimitError, 429))
     with pytest.raises(LLMRateLimitError):
         asyncio.run(service.extract("text", LeadExtraction, instructions="x"))
+
+
+def test_missing_credentials_maps_to_configuration_error() -> None:
+    # The SDK raises this TypeError at request-build time when no key resolves.
+    err = TypeError("Could not resolve authentication method. Expected one of api_key...")
+    service, _ = make_service(err)
+    with pytest.raises(LLMConfigurationError):
+        asyncio.run(service.extract("text", LeadExtraction, instructions="x"))
