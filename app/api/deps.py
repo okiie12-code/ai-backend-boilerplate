@@ -8,6 +8,7 @@ from app.core.config import Settings, get_settings
 from app.schemas.commands import Plan
 from app.services.ai_service import AIService
 from app.services.command_service import CommandService
+from app.services.core_bot import CoreBot
 from app.services.ledger import Ledger
 
 
@@ -23,6 +24,11 @@ def get_ledger(request: Request) -> Ledger:
     return ledger
 
 
+def get_core_bot(request: Request) -> CoreBot:
+    core_bot: CoreBot = request.app.state.core_bot
+    return core_bot
+
+
 def get_command_service(
     request: Request,
     ledger: Annotated[Ledger, Depends(get_ledger)],
@@ -36,3 +42,4 @@ SettingsDep = Annotated[Settings, Depends(get_settings)]
 AIServiceDep = Annotated[AIService, Depends(get_ai_service)]
 LedgerDep = Annotated[Ledger, Depends(get_ledger)]
 CommandServiceDep = Annotated[CommandService, Depends(get_command_service)]
+CoreBotDep = Annotated[CoreBot, Depends(get_core_bot)]
