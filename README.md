@@ -29,7 +29,7 @@ This boilerplate handles those cases so you can delete the parts you don't need 
 | Errors | one `{"error": {...}}` shape, provider details hidden | raw tracebacks to the client |
 | Observability | JSON logs, request ID on every line & response | `print()` |
 | Config | typed, validated, `.env`-driven | scattered `os.getenv` |
-| Tests | 19 tests, **no API key or network** needed | none |
+| Tests | 70 tests, **no API key or network** needed | none |
 
 ---
 
@@ -267,7 +267,7 @@ ledger applies a transaction exactly once under 50 simultaneous calls.
 ## Development
 
 ```bash
-pytest                # 19 tests, no API key or network needed
+pytest                # 70 tests, no API key or network needed
 ruff check . && ruff format --check .
 mypy app              # strict mode, clean
 ```
@@ -295,3 +295,17 @@ real front-end origins.
 ## License
 
 MIT — see `LICENSE`. Use it, sell what you build on it, no attribution required.
+
+---
+
+## Work with me
+
+I build production AI backends on this exact stack: streaming chat APIs, document and lead
+extraction, support bots, and safe natural-language → action pipelines. Typical projects:
+
+- **AI data extraction** — invoices, receipts, emails or PDFs → validated JSON / spreadsheet rows
+- **Streaming chat API** — a Claude-powered assistant behind your app, with logging and error handling
+- **Chatbot adapters** — Discord / Slack / web chat → parsed, validated actions in your backend
+- **Hardening an existing AI prototype** — tests, typed config, observability, Docker deploy
+
+Open an issue on this repo or message me on GitHub ([@okiie12-code](https://github.com/okiie12-code)) to talk about a project.
